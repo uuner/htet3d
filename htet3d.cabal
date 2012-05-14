@@ -1,0 +1,13 @@
+name:           htet3d
+version:        0.1
+synopsis:       3d tetris-like game
+author:         Julia Jomantaite
+license:        BSD3
+build-type:     Simple
+cabal-version:  >= 1.2
+
+executable htet3d
+  main-is:        Main.hs
+  build-depends:  base >=2, OpenGL, GLUT, random, containers, array, old-time
+  hs-source-dirs: src
+  GHC-Options:    -O2
