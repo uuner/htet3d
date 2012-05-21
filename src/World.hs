@@ -3,7 +3,7 @@ import Control.Monad (when)
 import Data.IORef
 import Data.List
 import Data.Maybe
-import Graphics.Rendering.OpenGL 
+import Graphics.Rendering.OpenGL
 import Graphics.UI.GLUT
 import qualified Data.Map as M
 
@@ -46,8 +46,8 @@ changePM mode world = do
 setPieceFallCallback world = do
     field <- get $ wField world
     calls <- get (wCallCount world)
-    (wCallCount world) $= calls + 1
-    addTimerCallback (levelTime!(level field))
+    wCallCount world $= calls + 1
+    addTimerCallback (levelTime ! level field)
                      (pieceFallCallback world)
 
 pieceFallCallback world = do
@@ -56,58 +56,48 @@ pieceFallCallback world = do
     gm <- get (wGM world)
 
     if calls > 1 || pm /= MainMode || gm /= Playing
-         then
-         (wCallCount world) $= calls - 1
-         else 
+       then
+         wCallCount world $= calls - 1
+       else
          do field' <- get (wField world)
             piece' <- get (wPiece world)
             postRedisplay Nothing
-            if (not $ isOver field')
-                 then
-                 (do (newfield, newpiece) <- dropPiece field' piece'
-                     wField world $= newfield
-                     wPiece world $= newpiece
-                     wPieceEdges world $= Nothing
-                     addTimerCallback (levelTime!(level field')) 
-                                      (pieceFallCallback world)
-                         
-                 )
-                 else
-                 (wGM world $= GameOver)
-
-
+            if not $ isOver field'
+                then do (newfield, newpiece) <- dropPiece field' piece'
+                        wField world $= newfield
+                        wPiece world $= newpiece
+                        wPieceEdges world $= Nothing
+                        addTimerCallback (levelTime ! level field')
+                                         (pieceFallCallback world)
+                else wGM world $= GameOver
 
 initWorld = do
       let width  = 5
           heigth = 5
           depth  = 10
-      rPiece <- createRandomPiece width heigth depth 
+      rPiece <- createRandomPiece width heigth depth
       field <- newIORef (createField width heigth depth rPiece)
       rPiece <- createRandomPiece width heigth depth
       piece <- newIORef rPiece
       edges <- newIORef Nothing
-      nextAnimation <- newIORef (InfiniteAnim (Nothing, Just $ 
-            RotateShift  {animCurrentAngle = 0,
-                          animAngleStep = 0.5,
-                          animAxis = Vector3 0 0 (fromIntegral depth::GLdouble)}))
-
+      nextAnimation <- newIORef (InfiniteAnim (Nothing,
+          Just RotateShift { animCurrentAngle = 0,
+                             animAngleStep = 0.5,
+                             animAxis = Vector3 0 0 (fromIntegral depth :: GLdouble)}))
       pieceAnim <- newIORef Nothing
-      pm <- newIORef (MainMode)
-      gm <- newIORef (Playing)
-      animate <- newIORef (False)
+      pm <- newIORef MainMode
+      gm <- newIORef Playing
+      animate <- newIORef False
       calls <- newIORef 1
-      return $ World {wWidth = width,
-                      wHeight = heigth,
-                      wDepth = depth,
-                      wField = field,
-                      wPiece = piece,
-                      wAnimNext = nextAnimation,
-                      wColoredLayers = True,
-                      wPieceEdges = edges,
-                      wPM = pm,
-                      wGM = gm,
-                      wCallCount = calls,
-                      wAnimate = animate}
-
-
-
+      return World { wWidth = width,
+                     wHeight = heigth,
+                     wDepth = depth,
+                     wField = field,
+                     wPiece = piece,
+                     wAnimNext = nextAnimation,
+                     wColoredLayers = True,
+                     wPieceEdges = edges,
+                     wPM = pm,
+                     wGM = gm,
+                     wCallCount = calls,
+                     wAnimate = animate }
