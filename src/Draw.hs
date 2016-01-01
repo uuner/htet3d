@@ -52,7 +52,7 @@ display world = preservingMatrix $ do
 
     viewport $= (Position (fromIntegral sqsize) (fromIntegral $ winH - nextsize - (div nextsize 4)), 
                  Size nextsize (div nextsize 4))
-    drawFrame $ "Scores: " ++ (show $ scores field)
+    drawFrame $ "Score: " ++ (show $ scores field)
     viewport $= (Position (fromIntegral sqsize) (fromIntegral $ winH - nextsize - (div nextsize 2)), 
                  Size nextsize (div nextsize 4))
     drawFrame $ "Level: " ++ (show $ level field)
