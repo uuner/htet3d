@@ -1,7 +1,9 @@
 htet3d
 ======
 
-very old and unfinished implementation of a tetris-like 3d game in haskell
+An unfinished implementation of a tetris-like 3d game in haskell
+
+![Screenshot](htet3d-scr.png?raw=true)
 
 arrows,q,w,e,a,s,d - move and rotate
 space - drop
