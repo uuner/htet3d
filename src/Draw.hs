@@ -1,3 +1,4 @@
+{-# LANGUAGE NoMonomorphismRestriction #-}
 module Draw where
 import Control.Monad (when)
 import Data.IORef
