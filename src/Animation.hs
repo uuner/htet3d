@@ -1,5 +1,6 @@
 module Animation where
 import Control.Monad (when)
+import Data.IORef
 import Data.List
 import Data.Maybe
 import Graphics.Rendering.OpenGL 
@@ -19,6 +20,7 @@ data Animation = NoAnim |
                  FiniteAnim (Maybe MoveShift, Maybe RotateShift) deriving Eq
 
 
+animStep :: IORef Animation -> IO ()
 animStep shift = do
     sh <- get shift
     case sh of
@@ -64,6 +66,7 @@ animGetCurrent c =
                 FiniteAnim x -> x
 
 
+drawAnimated :: IORef Animation -> IO() -> IO ()
 drawAnimated shift action = do
     sh <- get shift
     if sh == NoAnim
